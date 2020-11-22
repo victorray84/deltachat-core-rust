@@ -414,7 +414,7 @@ impl<'a> BlobObject<'a> {
             cause: err,
         })?;
 
-        let img_wh = if MediaQuality::from_i32(context.get_config_int(Config::MediaQuality).await)
+        let img_wh = if MediaQuality::from_i32(context.get_config_int(Config::MediaQuality).await?)
             .unwrap_or_default()
             == MediaQuality::Balanced
         {
@@ -505,6 +505,10 @@ pub enum BlobError {
     WrongBlobdir { blobdir: PathBuf, src: PathBuf },
     #[error("Blob has a badname {}", .blobname.display())]
     WrongName { blobname: PathBuf },
+    #[error("Sql: {0}")]
+    Sql(#[from] crate::sql::Error),
+    #[error("{0}")]
+    Other(#[from] crate::error::Error),
 }
 
 #[cfg(test)]

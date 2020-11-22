@@ -194,7 +194,9 @@ impl TestContext {
     ///
     /// Panics on errors or if the most recent message is a marker.
     pub async fn get_last_msg(&self, chat_id: ChatId) -> Message {
-        let msgs = chat::get_chat_msgs(&self.ctx, chat_id, 0, None).await;
+        let msgs = chat::get_chat_msgs(&self.ctx, chat_id, 0, None)
+            .await
+            .unwrap();
         let msg_id = if let ChatItem::Message { msg_id } = msgs.last().unwrap() {
             msg_id
         } else {
